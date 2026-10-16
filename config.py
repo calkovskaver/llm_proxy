@@ -8,4 +8,6 @@ class Config:
     API_PORT = int(os.getenv("PORT", os.getenv("API_PORT", 8000)))
     API_BASE_URL = f"http://{API_HOST}:{API_PORT}"
 
+    DATABASE = "llm_proxy.db"
+
 config = Config()
