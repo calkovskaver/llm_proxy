@@ -17,4 +17,4 @@ def test_detect_pii():
     assert detect_pii("This is a normal input without PII.") == False
 
 def test_detect_user_specific_sensitive_info():
-    assert detect_user_specific_sensitive_info("file /Users/veronikacalkovska/Desktop/") == True
+    assert detect_user_specific_sensitive_info("file /Users/veronikacalkovska/Desktop/ahoj.txt") == True

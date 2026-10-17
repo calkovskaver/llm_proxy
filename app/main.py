@@ -2,6 +2,8 @@ import httpx
 from fastapi import FastAPI, Request
 from config import config
 from security.input import InputSecurity
+from db.database import Database
+from datetime import datetime, timezone
 
 app = FastAPI(title="LLM Gateway")
 client = httpx.AsyncClient()
@@ -34,11 +36,16 @@ async def root(request:Request):
     if sensitive_info_detected:
         return {"error": "User-specific sensitive information detected in the input."}, 403
 
-    r = await client.post(url=url, headers=headers, json=data)
+    try:
+        r = await client.post(url=url, headers=headers, json=data)
+    except Exception as e:
+        print(e)
+        return {"error": e}, 403
 
     response = r.json()
-    print("Response from LLM API:", response)  # Debugging line to print the response
     tokens = response['usage']['total_tokens']
+
+    Database.insert_log("default_user", req_body["model"], tokens, datetime.now(timezone.utc).isoformat())
    
 
     return response
